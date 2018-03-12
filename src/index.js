@@ -17,8 +17,17 @@ import { store } from "./store";
 render(
   <MuiThemeProvider>
     <Provider store={store}>
-      <div>
-        <Header />
+        <div style={this.style}>
+          <AppBar
+            title="Github Dashboard sample"
+            onLeftIconButtonClick={this.handleMenu}
+          />
+          <Drawer open={this.state.open}
+            docked={false}
+            width={200}
+            onRequestChange={(open) => this.setState({ open })}>
+            <a href="/"><MenuItem>Search</MenuItem></a>
+          </Drawer>
         <Router>
           <div>
             <Route exact path="/" component={App} />
