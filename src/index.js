@@ -1,22 +1,31 @@
-import React, { Fragment } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import React from "react";
 import { render } from "react-dom";
-import { Provider } from "react-redux";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+import AppBar from "material-ui/AppBar";
+import Drawer from "material-ui/Drawer";
+import MenuItem from "material-ui/MenuItem"
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Provider } from 'react-redux'
 
-import Header from "./Header";
-import { App } from "./App";
-import { SearchForm } from "./SearchForm";
-import { Repositories } from "./Repositories";
-import { RepoInfo } from "./RepoInfo";
-
+import { SearchField } from "./SearchField";
+import { Repository } from "./Repository";
+import { SingleRepo } from "./SingleRepo";
 import { store } from "./store";
 
-// render(<App />, document.getElementById("root"));
+class App extends React.Component {
+  state = {
+    username: "",
+    currentRepo: {},
+    open: false
+  };
+  handleMenu = () => {
+    this.setState((previousState, props) => ({ open: !previousState.open }));
+  }
 
-render(
-  <MuiThemeProvider>
-    <Provider store={store}>
+  render() {
+    return (
+      <MuiThemeProvider>
+        <Provider store={store}>
         <div style={this.style}>
           <AppBar
             title="Github Dashboard sample"
@@ -28,15 +37,24 @@ render(
             onRequestChange={(open) => this.setState({ open })}>
             <a href="/"><MenuItem>Search</MenuItem></a>
           </Drawer>
-        <Router>
-          <div>
-            <Route exact path="/" component={App} />
-            <Route exact path="/repositories/:user" component={Repositories} />
-            <Route exact path="/repo/:id" component={RepoInfo} />
-          </div>
-        </Router>
-      </div>
-    </Provider>
-  </MuiThemeProvider>,
-  document.getElementById("root")
-);
+          <Router>
+            <div>
+              <Route exact path="/" component={SearchField} />
+              <Route path="/repository" component={Repository} />
+              <Route path="/singleRepo" component={SingleRepo} />
+            </div>
+          </Router>
+        </div>
+        </Provider>
+      </MuiThemeProvider>
+    );
+  }
+
+  style = {
+    display: "flex",
+    "alignItems": "center",
+    "flexDirection": "column"
+  };
+}
+
+render(<App />, document.getElementById("root"));
